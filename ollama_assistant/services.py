@@ -1,4 +1,4 @@
-from models import Thread, Message
+from ollama_assistant.models import Thread, Message
 from mongoengine import DoesNotExist
 
 

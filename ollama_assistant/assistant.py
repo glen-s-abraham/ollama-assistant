@@ -1,4 +1,5 @@
-from assistant_thread import AssistantThread
+from ollama_assistant.assistant_thread import AssistantThread
+
 
 class Assistant:
     """
@@ -16,12 +17,13 @@ class Assistant:
         An instance of AssistantThread which handles message threading.
     """
 
-    def __init__(self, model='mistrel'):
+    def __init__(self, api_url, model="mistrel"):
         """
         Initialize an Assistant with a specified model.
         """
-        self.__thread = AssistantThread(model=model)
-        
+        self.__base_url = api_url
+        self.__thread = AssistantThread(model=model,api_url=self.__base_url)
+
     @property
     def thread(self):
         """
@@ -33,6 +35,7 @@ class Assistant:
             Returns the instance of AssistantThread associated with this Assistant.
         """
         return self.__thread
+
 
 # Assuming `assistant_thread.py` is another module that contains the AssistantThread class
 # Example usage:

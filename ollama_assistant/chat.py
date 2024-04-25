@@ -1,17 +1,20 @@
 import json
 import requests
 import logging
-from settings import DEFAULT_API_URL
+from ollama_assistant.settings import DEFAULT_API_URL
 
 # Assuming 'settings.py' contains DEFAULT_API_URL and possibly other settings
 
+
 class Chat:
-    def __init__(self, model: str = 'mistrel', api_url: str = None, stream: bool = False):
+    def __init__(
+        self, model: str = "mistrel", api_url: str = None, stream: bool = False
+    ):
         self.__base_url = api_url or DEFAULT_API_URL
         self.__model = model
         self.__stream = stream
-        self.__headers = {'Content-Type': 'application/json'}
-    
+        self.__headers = {"Content-Type": "application/json"}
+
     def chat(self, messages: list) -> str:
         """
         Send messages to the chat endpoint and get a response.
@@ -27,12 +30,8 @@ class Chat:
             The response message from the server, or an empty string if an error occurs.
         """
         url = f"{self.__base_url}/chat"
-        data = {
-            "model": self.__model,
-            "stream": self.__stream,
-            "messages": messages
-        }
-        
+        data = {"model": self.__model, "stream": self.__stream, "messages": messages}
+
         try:
             response = requests.post(url, headers=self.__headers, data=json.dumps(data))
             response.raise_for_status()
@@ -42,6 +41,7 @@ class Chat:
         except requests.exceptions.RequestException as e:
             logging.error(f"Error occurred during chat: {e}")
             return None
+
 
 # Be sure to initialize the logging system at the start of your application
 # logging.basicConfig(level=logging.INFO)

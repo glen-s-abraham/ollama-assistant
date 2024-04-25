@@ -1,5 +1,5 @@
 import logging
-from services import ThreadService
+from ollama_assistant.services import ThreadService
 
 
 class Messages:
@@ -9,7 +9,15 @@ class Messages:
         """
         self.__thread_service = ThreadService()
 
-    def create_thread_message(self, thread_id: str, role: str, content: str):
+    def init_thread_messages(self, thread_id: str):
+        thread = self.__thread_service.fetch_thread(thread_id)
+        if not thread:
+            logging.info(
+                f"Thread with id {thread_id} does not exist, creating a new one."
+            )
+            self.__thread_service.create_thread(thread_id=thread_id)
+
+    def create_thread_message(self, thread_id: str, role: str = "", content: str = ""):
         """
         Create a message in the specified thread.
 
@@ -29,10 +37,8 @@ class Messages:
 
         thread = self.__thread_service.fetch_thread(thread_id)
         if not thread:
-            logging.info(
-                f"Thread with id {thread_id} does not exist, creating a new one."
-            )
-            self.__thread_service.create_thread(thread_id=thread_id)
+            logging.info(f"Thread with id {thread_id} does not exist")
+            raise ValueError(f"Thread with id {thread_id} does not exist")
 
         self.__thread_service.append_message(
             thread_id=thread_id, role=role, content=content

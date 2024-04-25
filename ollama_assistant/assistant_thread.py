@@ -1,7 +1,7 @@
 import uuid
 import logging
-from messages import Messages
-from chat import Chat
+from ollama_assistant.messages import Messages
+from ollama_assistant.chat import Chat
 
 
 class AssistantThread:
@@ -14,9 +14,10 @@ class AssistantThread:
         The model used by the chat thread, default is 'mistrel'.
     """
 
-    def __init__(self, model="mistrel"):
+    def __init__(self, api_url, model="mistrel"):
+        self.__base_url = api_url
         self.__messages = Messages()
-        self.__chat = Chat(model=model)
+        self.__chat = Chat(model=model, api_url=self.__base_url)
 
     def __generate_thread_id(self) -> str:
         """
@@ -42,8 +43,8 @@ class AssistantThread:
         AssistantThread
             The instance of AssistantThread with a new thread created.
         """
-        thread_id = self.__generate_thread_id()
-        self.__messages.create_thread_message(thread_id=thread_id)
+        self.__thread_id = self.__generate_thread_id()
+        self.__messages.init_thread_messages(thread_id=self.__thread_id)
         # other logic if required
         return self
 
